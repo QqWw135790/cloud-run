@@ -1,0 +1,42 @@
+name: run-command
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "要执行的命令"
+        required: true
+        default: "nproc && free -h && df -h /"
+      timeout_minutes:
+        description: "超时分钟数(最大350)"
+        required: false
+        default: "20"
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(github.event.inputs.timeout_minutes) || 20 }}
+    steps:
+      - name: 机器规格
+        run: nproc && free -h && df -h /
+
+      - uses: actions/checkout@v4
+
+      - name: 执行命令
+        run: ${{ github.event.inputs.command }}
+
+      - name: 收集产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: |
+            *.txt
+            *.log
+            out/**
+            dist/**
+          if-no-files-found: ignore
+          retention-days: 7
