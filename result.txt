@@ -1,5 +1,11 @@
 === [A] apkeep apk-pure @ 1.16.221.01
-The dangers of using this download source must be explicitly acknowledged: https://github.com/EFForg/apkeep/blob/master/USAGE-apkpure.md
+error: unexpected argument '--acknowledge-risks-apk-pure' found
+
+  tip: to pass '--acknowledge-risks-apk-pure' as a value, use '-- --acknowledge-risks-apk-pure'
+
+Usage: apkeep <-a app_id[@version] | -c csv [-f field] [-v version_field]> [-d download_source] [-r parallel] OUTPATH
+
+For more information, try '--help'.
 total 0
 === [B] archive.org minecraft-1-19-73 : all files
 TITLE: minecraft-1-19-73
