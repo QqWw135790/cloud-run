@@ -1,68 +1,7 @@
-=== target version: 1.16.221.01
---- try https://d.apkpure.com/b/APK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5829  100  5829    0     0  60982      0 --:--:-- --:--:-- --:--:-- 60718
-    code=403 size=5829 type=HTML document, ASCII text, with very long lines (5829), with
---- try https://d.apkpure.com/b/APK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5841  100  5841    0     0   145k      0 --:--:-- --:--:-- --:--:--  146k
-    code=403 size=5841 type=HTML document, ASCII text, with very long lines (5841), with
---- try https://d.apkpure.com/b/XAPK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5832  100  5832    0     0   134k      0 --:--:-- --:--:-- --:--:--  135k
-    code=403 size=5832 type=HTML document, ASCII text, with very long lines (5832), with
---- try https://d.apkpure.com/b/XAPK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5844  100  5844    0     0   162k      0 --:--:-- --:--:-- --:--:--  167k
-    code=403 size=5844 type=HTML document, ASCII text, with very long lines (5844), with
---- try https://d.apkpure.net/b/APK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42    0    42    0     0    148      0 --:--:-- --:--:-- --:--:--   148
-100  5604  100  5604    0     0  15043      0 --:--:-- --:--:-- --:--:-- 15043
-    code=403 size=5604 type=HTML document, ASCII text, with very long lines (5604), with
---- try https://d.apkpure.net/b/APK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42    0    42    0     0     65      0 --:--:-- --:--:-- --:--:--    65100    42    0    42    0     0     65      0 --:--:-- --:--:-- --:--:--    65
-100  5604  100  5604    0     0   8339      0 --:--:-- --:--:-- --:--:--  8339
-    code=403 size=5604 type=HTML document, ASCII text, with very long lines (5604), with
---- try https://d.apkpure.net/b/XAPK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42    0    42    0     0     72      0 --:--:-- --:--:-- --:--:--    72100    42    0    42    0     0     72      0 --:--:-- --:--:-- --:--:--    72
-100  5604  100  5604    0     0   9226      0 --:--:-- --:--:-- --:--:--  9226
-    code=403 size=5604 type=HTML document, ASCII text, with very long lines (5604), with
---- try https://d.apkpure.net/b/XAPK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42    0    42    0     0     65      0 --:--:-- --:--:-- --:--:--    65
-100  5604  100  5604    0     0   8246      0 --:--:-- --:--:-- --:--:--  8246
-    code=403 size=5604 type=HTML document, ASCII text, with very long lines (5604), with
---- try https://download.apkpure.com/b/APK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5836  100  5836    0     0  71415      0 --:--:-- --:--:-- --:--:-- 71170
-    code=403 size=5836 type=HTML document, ASCII text, with very long lines (5836), with
---- try https://download.apkpure.com/b/APK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5848  100  5848    0     0   151k      0 --:--:-- --:--:-- --:--:--  154k
-    code=403 size=5848 type=HTML document, ASCII text, with very long lines (5848), with
---- try https://download.apkpure.com/b/XAPK/com.mojang.minecraftpe?version=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5839  100  5839    0     0   170k      0 --:--:-- --:--:-- --:--:--  172k
-    code=403 size=5839 type=HTML document, ASCII text, with very long lines (5839), with
---- try https://download.apkpure.com/b/XAPK/com.mojang.minecraftpe?versionCode=1.16.221.01
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  5851  100  5851    0     0   127k      0 --:--:-- --:--:-- --:--:--  129k
-    code=403 size=5851 type=HTML document, ASCII text, with very long lines (5851), with
---- fallback apkcombo
-    size=0
+=== fetch com.mojang.minecraftpe via aptoide
+--- https://ws75.aptoide.com/api/7/listAppVersions/package_name=com.mojang.minecraftpe/limit=60
+    bytes=100
+count 0
+RAW {"info": {"status": "OK", "time": {"seconds": 0.017590999603271484, "human": "18 milliseconds"}}, "list": []}
+PICKED_URL=
 DOWNLOAD_FAILED
