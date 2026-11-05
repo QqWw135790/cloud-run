@@ -1,12 +1,13 @@
-=== [A] apkeep correct syntax
-error: invalid value 'apkpure' for '--download-source <download_source>'
-  [possible values: apk-pure, google-play, f-droid]
-
-  tip: a similar value exists: 'apk-pure'
-
-For more information, try '--help'.
+=== [A] apkeep apk-pure @ 1.16.221.01
+The dangers of using this download source must be explicitly acknowledged: https://github.com/EFForg/apkeep/blob/master/USAGE-apkpure.md
 total 0
-=== [B] archive.org item: minecraft-1-19-73
-TITLE: minecraft-1-19-73 | Minecraft bedrock edition завантажити файл
-PICKED_FILE=
+=== [B] archive.org minecraft-1-19-73 : all files
+TITLE: minecraft-1-19-73
+DESC: Minecraft bedrock edition завантажити файл
+FILES: 4
+ - minecraft-1-19-73_archive.torrent 1522 Archive BitTorrent
+ - minecraft-1-19-73_files.xml None Metadata
+ - minecraft-1-19-73_meta.sqlite 12288 Metadata
+ - minecraft-1-19-73_meta.xml 794 Metadata
+PICKED=
 DOWNLOAD_FAILED
