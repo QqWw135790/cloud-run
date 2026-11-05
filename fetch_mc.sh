@@ -7,7 +7,7 @@ echo "=== [A] apkeep apk-pure @ $VER"
 curl -sL --max-time 180 -o /tmp/apkeep "https://github.com/EFForg/apkeep/releases/latest/download/apkeep-x86_64-unknown-linux-gnu"
 chmod +x /tmp/apkeep
 rm -rf dl && mkdir -p dl
-/tmp/apkeep -a "com.mojang.minecraftpe@$VER" -d apk-pure dl 2>&1 | tail -10
+/tmp/apkeep -a "com.mojang.minecraftpe@$VER" -d apk-pure --acknowledge-risks-apk-pure dl 2>&1 | tail -10
 ls -l dl 2>/dev/null
 
 APK=$(ls dl/*.apk dl/*.xapk 2>/dev/null | head -1)
