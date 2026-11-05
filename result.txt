@@ -1,19 +1,82 @@
-=== [A] apkeep apk-pure @ 1.16.221.01
-error: unexpected argument '--acknowledge-risks-apk-pure' found
-
-  tip: to pass '--acknowledge-risks-apk-pure' as a value, use '-- --acknowledge-risks-apk-pure'
+=== apkeep help
+Downloads APKs from various sources
 
 Usage: apkeep <-a app_id[@version] | -c csv [-f field] [-v version_field]> [-d download_source] [-r parallel] OUTPATH
 
-For more information, try '--help'.
-total 0
-=== [B] archive.org minecraft-1-19-73 : all files
-TITLE: minecraft-1-19-73
-DESC: Minecraft bedrock edition завантажити файл
-FILES: 4
- - minecraft-1-19-73_archive.torrent 1522 Archive BitTorrent
- - minecraft-1-19-73_files.xml None Metadata
- - minecraft-1-19-73_meta.sqlite 12288 Metadata
- - minecraft-1-19-73_meta.xml 794 Metadata
-PICKED=
-DOWNLOAD_FAILED
+Arguments:
+  [OUTPATH]  Path to store output files
+
+Options:
+  -a, --app <app>
+          Provide the ID and optionally the version of an app directly (e.g. com.instagram.android)
+  -c, --csv <csv>
+          CSV file to use
+  -f, --field <field>
+          CSV field containing app IDs (used only if CSV is specified) [default: 1]
+  -v, --version-field <version_field>
+          CSV field containing versions (used only if CSV is specified)
+  -l, --list-versions
+          List the versions available
+  -d, --download-source <download_source>
+          Where to download the APKs from [default: google-play] [possible values: apk-pure, google-play, f-droid]
+  -o, --options <options>
+          A comma-separated list of additional options to pass to the download source
+  -i, --ini <ini>
+          The path to an ini file which contains configuration data
+      --oauth-token <google_oauth_token>
+          Google oauth token, required to retrieve long-lived aas token
+  -e, --email <google_email>
+          Google account email address (required if download source is Google Play)
+  -t, --aas-token <google_aas_token>
+          Google aas token  (required if download source is Google Play)
+      --auth-token <google_auth_token>
+          Google auth token (alternative to aas-token, e.g., from Aurora dispenser)
+      --accept-tos
+          Accept Google Play Terms of Service
+  -s, --sleep-duration <sleep_duration>
+          Sleep duration (in ms) before download requests [default: 0]
+  -r, --parallel <parallel>
+          The number of parallel APK fetches to run at a time [default: 4]
+  -h, --help
+          Print help
+  -V, --version
+          Print version
+=== archive explore
+-- mcbe-1.1.2.5
+  TITLE: Minecraft: Bedrock Edition - v1.1.2
+  - mc_v1.1.2.5_x64.zip 131860377
+  - mcbe-1.1.2.5_archive.torrent 6679
+  - mcbe-1.1.2.5_files.xml None
+  - mcbe-1.1.2.5_meta.sqlite 20480
+  - mcbe-1.1.2.5_meta.xml 1189
+-- minecraft-bedrock-edition-v1.20.x-cloned-apk-for-arm64
+  TITLE: Minecraft Bedrock Edition v1.20.x cloned APK for arm64
+  - Minecraft v1.20.1.02_cloned (972000102).zip 197133806
+  - Minecraft v1.20.12.01_cloned (972001201).zip 196224751
+  - Minecraft v1.20.15.01_cloned (972001501).zip 196232206
+  - Minecraft v1.20.32.03_cloned (972003203).zip 216153588
+  - Minecraft v1.20.41.02_cloned (972004102).zip 217849849
+  - Minecraft v1.20.51.01 cloned (972005101).zip 218967021
+  - Minecraft v1.20.62.02_cloned (972007102).zip 260449550
+  - Minecraft v1.20.71.01_cloned (972007301).zip 244579242
+  - Minecraft v1.20.73.01_cloned (972007501).zip 243374548
+  - Minecraft v1.20.81.01_cloned (972008101).zip 237826930
+  - minecraft-bedrock-edition-v1.20.x-cloned-apk-for-arm64_archive.torrent 25988
+  - minecraft-bedrock-edition-v1.20.x-cloned-apk-for-arm64_files.xml None
+=== archive search more
+com.TSG.ONAS3 | One Freddy Story 3 (all versions except 1.0 - andr
+toca.-boo.-1.0.1-min.android-4.1 | android 4.x game compilation
+toolcoin-v1.0 | ToolCoin v1.0
+guilded_9.0.8 | Guilded 9.0.8 (September 4, 2025)
+minecraftapk-latest-version_20250319 | minecraftapk-latest-version
+city-craft-3-tnt-edition | City Craft 3 TNT Edition
+1.20.40.01-arm-64-v-8a-patched | 1.20.40.01 Arm 64 V 8a Patched
+lokicraft-1.09 | lokicraft-1.0 and others
+com.vetstudio.gangstarcube | Gangstar CUBE (VetStudio)
+com.minecraftpe.minicraft.mastercraft.atharcraft | Athar Craft (Android - All Versions)
+com.playgendary.ktb2_202508 | Random Lot Of APKs 1
+thingiverse-1330919 | Minecraft Sword (1330919)
+dev.projectearth.patcher | Project Earth
+minecraft-1-1-5 | minecraft-1-1-5
+com.mojang.minecraftpe-1.12.1.1 | Minecraft PE 1.12.1.1 APK
+DONE
