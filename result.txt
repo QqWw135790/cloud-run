@@ -1,7 +1,2 @@
-=== fetch com.mojang.minecraftpe via aptoide
---- https://ws75.aptoide.com/api/7/listAppVersions/package_name=com.mojang.minecraftpe/limit=60
-    bytes=100
-count 0
-RAW {"info": {"status": "OK", "time": {"seconds": 0.017590999603271484, "human": "18 milliseconds"}}, "list": []}
-PICKED_URL=
-DOWNLOAD_FAILED
+curl: (2) no URL specified
+curl: try 'curl --help' or 'curl --manual' for more information
