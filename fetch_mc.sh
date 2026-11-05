@@ -1,29 +1,33 @@
 #!/bin/bash
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-echo "=== apkeep help"
+VER=${VER:-1.16.221.01}
+echo "=== apkeep apk-pure with tty, ver=$VER"
 curl -sL --max-time 180 -o /tmp/apkeep "https://github.com/EFForg/apkeep/releases/latest/download/apkeep-x86_64-unknown-linux-gnu"
 chmod +x /tmp/apkeep
-/tmp/apkeep --help 2>&1 | head -45
+rm -rf dl && mkdir -p dl
+printf 'y\ny\n' | script -qec "/tmp/apkeep -a com.mojang.minecraftpe@$VER -d apk-pure dl" /dev/null 2>&1 | tail -15
+ls -l dl
 
-echo "=== archive explore"
-for it in mcbe-1.1.2.5 minecraft-bedrock-edition-v1.20.x-cloned-apk-for-arm64; do
-  echo "-- $it"
-  curl -sL --max-time 60 "https://archive.org/metadata/$it" -o m.json
-  python3 -c "
-import json
-try:
-    d=json.load(open('m.json'))
-    print('  TITLE:',d.get('metadata',{}).get('title'))
-    for f in d.get('files',[])[:12]: print('  -',f.get('name'),f.get('size'))
-except Exception as e: print('  ERR',e)
-"
-done
+APK=$(ls dl/*.apk dl/*.xapk 2>/dev/null | head -1)
+echo "APK_FILE=$APK"
 
-echo "=== archive search more"
-curl -s --max-time 60 "https://archive.org/advancedsearch.php?q=minecraft+apk&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=downloads&rows=15&output=json" -o s.json
-python3 -c "
-import json
-d=json.load(open('s.json'))
-for x in d['response']['docs']: print(x.get('identifier'),'|',str(x.get('title'))[:50])
-"
-echo "DONE"
+if [ -z "$APK" ]; then
+  echo "=== fallback archive.org cloned 1.20.81.01"
+  ITEM=minecraft-bedrock-edition-v1.20.x-cloned-apk-for-arm64
+  F="Minecraft v1.20.81.01_cloned (972008101).zip"
+  ENC=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$F")
+  curl -L --max-time 900 -A "$UA" -o z.zip "https://archive.org/download/$ITEM/$ENC"
+  echo "zip size=$(stat -c%s z.zip 2>/dev/null || echo 0)"
+  mkdir -p ex && cd ex && unzip -o -q ../z.zip 2>&1 | tail -3; cd ..
+  APK=$(find ex -name '*.apk' | head -1)
+  echo "APK_FILE=$APK"
+fi
+
+if [ -z "$APK" ] || [ ! -s "$APK" ]; then echo "DOWNLOAD_FAILED"; exit 0; fi
+SZ=$(stat -c%s "$APK"); echo "size=$SZ type=$(file -b "$APK" | cut -c1-40)"
+if [ "$SZ" -lt 20000000 ]; then echo "TOO_SMALL"; exit 0; fi
+
+echo "=== uploading"
+FINAL=$(curl -s --max-time 900 -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@$APK" https://litterbox.catbox.moe/resources/internals/api.php)
+echo "FINAL_URL=$FINAL"
+echo "MD5=$(md5sum "$APK" | cut -d' ' -f1)"
