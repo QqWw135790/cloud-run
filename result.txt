@@ -1,2 +1,17 @@
-curl: (2) no URL specified
-curl: try 'curl --help' or 'curl --manual' for more information
+RUN_START
+=== uptodown: looking for 1.16.221
+list bytes=132780 code-ok
+found 0
+PICK None
+NO_VERSION_PAGE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+<title>Must-Have Entertainment Apps for Android</title>
+<link rel="preconnect" href="https://img.utdstc.com">
+<link rel="preconnect" href="https://stc.utdstc.com">
+<link rel="preload" crossorigin="anonymous" href="https://stc.utdstc.com/fonts/geomanist-medium-webfont.woff2" as="font" type="font/woff2">
+<link rel="preload" crossorigin="anonymo
+DOWNLOAD_FAILED
