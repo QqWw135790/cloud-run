@@ -13,31 +13,46 @@ on:
         default: "20"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   run:
+    outputs:
+      result-artifact: ${{ steps.save-result.outputs.artifact-id }}
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(github.event.inputs.timeout_minutes) || 20 }}
+    timeout-minutes: ${{ fromJSON(inputs.timeout_minutes || '20') || 20 }}
     steps:
+      - name: 检查超时时间
+        env:
+          MINUTES: ${{ inputs.timeout_minutes || '20' }}
+        run: |
+          if [[ ! "$MINUTES" =~ ^[1-9][0-9]{0,2}$ ]] || (( MINUTES > 350 )); then
+            echo "超时时间必须是 1 到 350 的整数" >&2
+            exit 1
+          fi
+
       - name: 机器规格
         run: nproc && free -h && df -h /
 
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: 执行命令
-        run: |
-                 exec > result.txt 2>&1
-                  ${{ github.event.inputs.command }}
+        id: command
+        env:
+          COMMAND: ${{ inputs.command }}
+        run: bash -e -c "$COMMAND" > result.txt 2>&1
 
-      - name: 回写结果
-        if: always()
-        run: |
-          git config user.name bot
-          git config user.email bot@example.com
-          git add result.txt
-          git commit -m "result" || true
-          git push
+      - name: 保存待回写的结果
+        id: save-result
+        if: ${{ !cancelled() && steps.command.outcome != 'skipped' && github.ref_type == 'branch' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: command-result-${{ github.run_attempt }}
+          path: result.txt
+          if-no-files-found: error
+          retention-days: 1
 
       - name: 收集产物
         if: always()
@@ -51,3 +66,32 @@ jobs:
             dist/**
           if-no-files-found: ignore
           retention-days: 7
+
+  write-result:
+    needs: run
+    if: ${{ !cancelled() && needs.run.outputs.result-artifact != '' }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.run.outputs.result-artifact }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/command-result
+
+      - name: 回写结果
+        run: |
+          src="$RUNNER_TEMP/command-result/result.txt"
+          test -f "$src" && test ! -L "$src" || exit 1
+          cp --remove-destination -- "$src" result.txt
+          git add -- result.txt
+          if git diff --cached --quiet -- result.txt; then
+            exit 0
+          fi
+          git -c user.name=bot -c user.email=bot@example.com commit -m "result"
+          git push origin "HEAD:$GITHUB_REF"
