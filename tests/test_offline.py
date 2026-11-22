@@ -13,7 +13,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github/workflows/run-command.yml"
-JOBS = yaml.safe_load(WORKFLOW.read_text())["jobs"]
+CONFIG = yaml.safe_load(WORKFLOW.read_text())
+JOBS = CONFIG["jobs"]
 
 
 def step(job, step_id):
@@ -26,6 +27,11 @@ def run_step(source, directory, **env):
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_output_publication_is_opt_in(self):
+        publish = CONFIG["on"]["workflow_dispatch"]["inputs"]["publish_output"]
+        self.assertEqual(publish["type"], "boolean")
+        self.assertIs(publish["default"], False)
+
     def test_timeout(self):
         check = step("validate", "timeout")["run"]
         self.assertEqual(JOBS["run"]["needs"], "validate")
