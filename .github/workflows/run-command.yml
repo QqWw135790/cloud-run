@@ -1,46 +1,106 @@
 name: run-command
 
-on:
+"on":
   workflow_dispatch:
     inputs:
       command:
         description: "要执行的命令"
         required: true
         default: "nproc && free -h && df -h /"
+      preview_output:
+        description: "在 Actions 日志中预览可公开的输出（前 8 KiB）"
+        type: boolean
+        default: false
+      publish_output:
+        description: "发布输出到 Git 历史和工作流产物（默认关闭）"
+        type: boolean
+        default: false
       timeout_minutes:
         description: "超时分钟数(最大350)"
         required: false
         default: "20"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  run:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(github.event.inputs.timeout_minutes) || 20 }}
+    outputs:
+      minutes: ${{ steps.timeout.outputs.minutes }}
+    steps:
+      - name: 检查超时时间
+        id: timeout
+        env:
+          MINUTES: ${{ inputs.timeout_minutes || '20' }}
+        run: |
+          if [[ ! "$MINUTES" =~ ^[1-9][0-9]{0,2}$ ]] || (( MINUTES > 350 )); then
+            echo "超时时间必须是 1 到 350 的整数" >&2
+            exit 1
+          fi
+
+          echo "minutes=$MINUTES" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: validate
+    outputs:
+      result-artifact: ${{ steps.save-result.outputs.artifact-id }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(needs.validate.outputs.minutes) }}
     steps:
       - name: 机器规格
         run: nproc && free -h && df -h /
 
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: 执行命令
+        id: command
         run: |
-                 exec > result.txt 2>&1
-                  ${{ github.event.inputs.command }}
+          # 从事件文件读取命令，避免 runner 在步骤的 env 信息中显示命令文本。
+          status=0
+          python3 -c '
+          import json
+          import os
 
-      - name: 回写结果
-        if: always()
+          with open(os.environ["GITHUB_EVENT_PATH"]) as event:
+              command = json.load(event)["inputs"]["command"]
+          os.execl("/bin/bash", "bash", "-e", "-c", command)
+          ' > result.txt 2>&1 || status=$?
+          printf '命令退出码：%d\n' "$status" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: 预览可公开的输出
+        id: preview
+        if: ${{ !cancelled() && inputs.preview_output && (steps.command.outcome == 'success' || steps.command.outcome == 'failure') }}
         run: |
-          git config user.name bot
-          git config user.email bot@example.com
-          git add result.txt
-          git commit -m "result" || true
-          git push
+          test -f result.txt && test ! -L result.txt || exit 1
+          python3 - <<'PY'
+          from uuid import uuid4
+
+          with open("result.txt", "rb") as result:
+              data = result.read(8193)
+          marker = uuid4().hex
+          print(f"::stop-commands::{marker}")
+          print(data[:8192].decode("utf-8", errors="replace"))
+          if len(data) > 8192:
+              print("（仅显示前 8 KiB）")
+          print(f"::{marker}::")
+          PY
+
+      - name: 保存待回写的结果
+        id: save-result
+        if: ${{ !cancelled() && inputs.publish_output && (steps.command.outcome == 'success' || steps.command.outcome == 'failure') && github.ref_type == 'branch' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: command-result-${{ github.run_attempt }}
+          path: result.txt
+          if-no-files-found: error
+          retention-days: 1
 
       - name: 收集产物
-        if: always()
+        if: ${{ !cancelled() && inputs.publish_output && (steps.command.outcome == 'success' || steps.command.outcome == 'failure') }}
         uses: actions/upload-artifact@v4
         with:
           name: output
@@ -51,3 +111,32 @@ jobs:
             dist/**
           if-no-files-found: ignore
           retention-days: 7
+
+  write-result:
+    needs: run
+    if: ${{ always() && !cancelled() && (needs.run.result == 'success' || needs.run.result == 'failure') && needs.run.outputs.result-artifact != '' }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.run.outputs.result-artifact }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/command-result
+
+      - name: 回写结果
+        run: |
+          src="$RUNNER_TEMP/command-result/result.txt"
+          test -f "$src" && test ! -L "$src" || exit 1
+          cp --remove-destination -- "$src" result.txt
+          git add -- result.txt
+          if git diff --cached --quiet -- result.txt; then
+            exit 0
+          fi
+          git -c user.name=bot -c user.email=bot@example.com commit -m "result"
+          git push origin "HEAD:$GITHUB_REF"
