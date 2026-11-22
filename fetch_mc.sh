@@ -51,6 +51,7 @@ upload_link() {
   printf '%s\n' "$response"
 }
 
+# -F 的内层引号由 curl 解析，保护文件名中的空格、逗号和分号。
 echo "=== upload temp.sh"
 R1=$(upload_link --max-time 600 -F "file=@\"$APK\"" https://temp.sh/upload)
 echo "TEMP_SH=$R1"
