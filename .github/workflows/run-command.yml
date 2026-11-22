@@ -7,6 +7,10 @@ name: run-command
         description: "要执行的命令"
         required: true
         default: "nproc && free -h && df -h /"
+      preview_output:
+        description: "在 Actions 日志中预览可公开的输出（前 8 KiB）"
+        type: boolean
+        default: false
       publish_output:
         description: "发布输出到 Git 历史和工作流产物（默认关闭）"
         type: boolean
@@ -53,9 +57,37 @@ jobs:
 
       - name: 执行命令
         id: command
-        env:
-          COMMAND: ${{ inputs.command }}
-        run: bash -e -c "$COMMAND" > result.txt 2>&1
+        run: |
+          # 从事件文件读取命令，避免 runner 在步骤的 env 信息中显示命令文本。
+          status=0
+          python3 -c '
+          import json
+          import os
+
+          with open(os.environ["GITHUB_EVENT_PATH"]) as event:
+              command = json.load(event)["inputs"]["command"]
+          os.execl("/bin/bash", "bash", "-e", "-c", command)
+          ' > result.txt 2>&1 || status=$?
+          printf '命令退出码：%d\n' "$status" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: 预览可公开的输出
+        id: preview
+        if: ${{ !cancelled() && inputs.preview_output && (steps.command.outcome == 'success' || steps.command.outcome == 'failure') }}
+        run: |
+          test -f result.txt && test ! -L result.txt || exit 1
+          python3 - <<'PY'
+          from uuid import uuid4
+
+          with open("result.txt", "rb") as result:
+              data = result.read(8193)
+          marker = uuid4().hex
+          print(f"::stop-commands::{marker}")
+          print(data[:8192].decode("utf-8", errors="replace"))
+          if len(data) > 8192:
+              print("（仅显示前 8 KiB）")
+          print(f"::{marker}::")
+          PY
 
       - name: 保存待回写的结果
         id: save-result

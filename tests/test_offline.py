@@ -1,4 +1,5 @@
 """Run with python3 -m unittest discover -s tests (requires PyYAML, bash, git and curl)."""
+import json
 import os
 import re
 import shutil
@@ -28,9 +29,29 @@ def run_step(source, directory, **env):
 
 class WorkflowTests(unittest.TestCase):
     def test_output_publication_is_opt_in(self):
-        publish = CONFIG["on"]["workflow_dispatch"]["inputs"]["publish_output"]
-        self.assertEqual(publish["type"], "boolean")
-        self.assertIs(publish["default"], False)
+        inputs = CONFIG["on"]["workflow_dispatch"]["inputs"]
+        for name in ("publish_output", "preview_output"):
+            with self.subTest(name=name):
+                self.assertEqual(inputs[name]["type"], "boolean")
+                self.assertIs(inputs[name]["default"], False)
+        preview = step("run", "preview")
+        self.assertEqual(preview["if"], "${{ !cancelled() && inputs.preview_output && "
+                         "(steps.command.outcome == 'success' || steps.command.outcome == 'failure') }}")
+
+    def test_public_preview(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "result.txt")
+            for length in (0, 8192, 8193):
+                with self.subTest(length=length):
+                    content = ("::warning::example\n" + "x" * length)[:length]
+                    path.write_text(content)
+                    preview = run_step(step("run", "preview")["run"], directory)
+                    self.assertEqual(preview.returncode, 0, preview.stderr)
+                    header, body = preview.stdout.split("\n", 1)
+                    self.assertRegex(header, r"^::stop-commands::[0-9a-f]{32}$")
+                    marker = header.split("::")[-1]
+                    note = "（仅显示前 8 KiB）\n" if length > 8192 else ""
+                    self.assertEqual(body, f"{content[:8192]}\n{note}::{marker}::\n")
 
     def test_timeout(self):
         check = step("validate", "timeout")["run"]
@@ -64,8 +85,14 @@ class WorkflowTests(unittest.TestCase):
                 tmp = Path(directory)
                 artifact = tmp / "command-result"
                 artifact.mkdir()
+                command = f"echo stdout; echo stderr >&2; exit {status}"
+                event = tmp / "event.json"
+                event.write_text(json.dumps({"inputs": {"command": command}}))
+                summary = tmp / "summary"
                 result = run_step(step("run", "command")["run"], artifact,
-                                  COMMAND=f"echo stdout; echo stderr >&2; exit {status}")
+                                  GITHUB_EVENT_PATH=str(event), GITHUB_STEP_SUMMARY=str(summary))
+                self.assertEqual(result.stdout + result.stderr, "")
+                self.assertEqual(summary.read_text(), f"命令退出码：{status}\n")
                 self.assertEqual(result.returncode, status)
                 # Use only a temporary local repository as the push destination.
                 remote = tmp / "remote.git"
